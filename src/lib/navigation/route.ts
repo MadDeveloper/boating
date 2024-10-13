@@ -154,8 +154,7 @@ export function calculateDeclinaison(
       annualDeclinaisonDelta * (currentYear - startYear)) /
     0.6
   const degrees = Math.trunc(newDeclinaisonInDegrees)
-  const degreesSign = degrees < 0 || Object.is(degrees, -0) ? -1 : 1
-  const minutes = Math.abs((newDeclinaisonInDegrees - degrees) * 0.6)
+  const minutes = (newDeclinaisonInDegrees - degrees) * 0.6
 
-  return safeDecimals(degreesSign * (Math.abs(degrees) + Math.abs(minutes)))
+  return safeDecimals(degrees + minutes)
 }
