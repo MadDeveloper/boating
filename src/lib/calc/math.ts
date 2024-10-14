@@ -88,3 +88,34 @@ export function normalizeAngle(angle: number, allowNegative?: boolean): number {
 
   return ((angle % 360) + 360) % 360
 }
+
+/**
+ * Converts an angle from degrees to radians.
+ *
+ * @param degrees - The angle in degrees to be converted.
+ * @returns The angle in radians.
+ *
+ * @example
+ * ```typescript
+ * const radians = degreesToRadians(180);
+ * console.log(radians); // Output: 3.141592653589793
+ * ```
+ */
+export function degreesToRadians(degrees: number): number {
+  return degrees * (Math.PI / 180)
+}
+
+/**
+ * Converts an angle from radians to degrees.
+ *
+ * @param radians - The angle in radians to be converted.
+ * @returns The angle in degrees.
+ *
+ * @example
+ * ```typescript
+ * const degrees = radiansToDegrees(Math.PI); // 180
+ * ```
+ */
+export function radiansToDegrees(radians: number): number {
+  return radians * (180 / Math.PI)
+}

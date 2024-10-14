@@ -1,6 +1,13 @@
 /* eslint-disable no-loss-of-precision */
 import { expect, suite, test } from "vitest"
-import { addAngle, areAnglesClose, normalizeAngle, safeDecimals } from "../math"
+import {
+  addAngle,
+  areAnglesClose,
+  degreesToRadians,
+  normalizeAngle,
+  radiansToDegrees,
+  safeDecimals,
+} from "../math"
 
 suite("safeDecimals", () => {
   test("should round to 14 decimal places", () => {
@@ -167,5 +174,79 @@ suite("normalizeAngle", () => {
   test("should handle large negative angles with allowNegative", () => {
     const result = normalizeAngle(-1080, true)
     expect(result).toBe(-0)
+  })
+})
+
+suite("degreesToRadians", () => {
+  test("should convert 0 degrees to 0 radians", () => {
+    const result = degreesToRadians(0)
+    expect(result).toBeCloseTo(0, 10)
+  })
+
+  test("should convert 180 degrees to π radians", () => {
+    const result = degreesToRadians(180)
+    expect(result).toBeCloseTo(Math.PI, 10)
+  })
+
+  test("should convert 360 degrees to 2π radians", () => {
+    const result = degreesToRadians(360)
+    expect(result).toBeCloseTo(2 * Math.PI, 10)
+  })
+
+  test("should convert 90 degrees to π/2 radians", () => {
+    const result = degreesToRadians(90)
+    expect(result).toBeCloseTo(Math.PI / 2, 10)
+  })
+
+  test("should convert -90 degrees to -π/2 radians", () => {
+    const result = degreesToRadians(-90)
+    expect(result).toBeCloseTo(-Math.PI / 2, 10)
+  })
+
+  test("should handle very small degree values", () => {
+    const result = degreesToRadians(0.0001)
+    expect(result).toBeCloseTo(0.0001 * (Math.PI / 180), 10)
+  })
+
+  test("should handle very large degree values", () => {
+    const result = degreesToRadians(1000000)
+    expect(result).toBeCloseTo(1000000 * (Math.PI / 180), 10)
+  })
+})
+
+suite("radiansToDegrees", () => {
+  test("should convert 0 radians to 0 degrees", () => {
+    const result = radiansToDegrees(0)
+    expect(result).toBeCloseTo(0, 10)
+  })
+
+  test("should convert π radians to 180 degrees", () => {
+    const result = radiansToDegrees(Math.PI)
+    expect(result).toBeCloseTo(180, 10)
+  })
+
+  test("should convert 2π radians to 360 degrees", () => {
+    const result = radiansToDegrees(2 * Math.PI)
+    expect(result).toBeCloseTo(360, 10)
+  })
+
+  test("should convert π/2 radians to 90 degrees", () => {
+    const result = radiansToDegrees(Math.PI / 2)
+    expect(result).toBeCloseTo(90, 10)
+  })
+
+  test("should convert -π/2 radians to -90 degrees", () => {
+    const result = radiansToDegrees(-Math.PI / 2)
+    expect(result).toBeCloseTo(-90, 10)
+  })
+
+  test("should handle very small radian values", () => {
+    const result = radiansToDegrees(0.0001)
+    expect(result).toBeCloseTo(0.0001 * (180 / Math.PI), 10)
+  })
+
+  test("should handle very large radian values", () => {
+    const result = radiansToDegrees(1000000)
+    expect(result).toBeCloseTo(1000000 * (180 / Math.PI), 10)
   })
 })

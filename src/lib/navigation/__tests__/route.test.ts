@@ -3,6 +3,7 @@ import {
   calculateBearingCompassVariation,
   calculateDeclinaison,
   calculateRouteCompassVariation,
+  calculateSurfaceRoute,
   calculateSurfaceRouteFromTrueCape,
   calculateTrueCapeFromCapeCompass,
   calculateTrueCapeFromSurfaceRoute,
@@ -430,6 +431,98 @@ suite("calculateSurfaceRouteFromTrueCape", () => {
     )
 
     const expectedSurfaceRoute = 5
+
+    expect(result).toBe(expectedSurfaceRoute)
+  })
+})
+
+suite("calculateSurfaceRoute", () => {
+  test("should calculate the surface route correctly with current drift", () => {
+    const backgroundRoute = 186
+    const currentDrift = 160
+    const currentStrength = 0.9
+    const surfaceSpeed = 5
+
+    const result = calculateSurfaceRoute(
+      backgroundRoute,
+      currentDrift,
+      currentStrength,
+      surfaceSpeed
+    )
+
+    const expectedSurfaceRoute = 190.5
+
+    expect(result).toBe(expectedSurfaceRoute)
+  })
+
+  test("should calculate the surface route correctly with current drift - second test", () => {
+    const backgroundRoute = 302
+    const currentDrift = 200
+    const currentStrength = 0.8
+    const surfaceSpeed = 5
+
+    const result = calculateSurfaceRoute(
+      backgroundRoute,
+      currentDrift,
+      currentStrength,
+      surfaceSpeed
+    )
+
+    const expectedSurfaceRoute = 311
+
+    expect(result).toBe(expectedSurfaceRoute)
+  })
+
+  test("should calculate the surface route correctly with zero current drift", () => {
+    const backgroundRoute = 45
+    const currentDrift = 0
+    const currentStrength = 5
+    const surfaceSpeed = 20
+
+    const result = calculateSurfaceRoute(
+      backgroundRoute,
+      currentDrift,
+      currentStrength,
+      surfaceSpeed
+    )
+
+    const expectedSurfaceRoute = 45
+
+    expect(result).toBe(expectedSurfaceRoute)
+  })
+
+  test("should calculate the surface route correctly with zero current strength", () => {
+    const backgroundRoute = 45
+    const currentDrift = 10
+    const currentStrength = 0
+    const surfaceSpeed = 20
+
+    const result = calculateSurfaceRoute(
+      backgroundRoute,
+      currentDrift,
+      currentStrength,
+      surfaceSpeed
+    )
+
+    const expectedSurfaceRoute = 45
+
+    expect(result).toBeCloseTo(expectedSurfaceRoute, 3)
+  })
+
+  test("should calculate the surface route correctly with zero surface speed", () => {
+    const backgroundRoute = 45
+    const currentDrift = 10
+    const currentStrength = 5
+    const surfaceSpeed = 0
+
+    const result = calculateSurfaceRoute(
+      backgroundRoute,
+      currentDrift,
+      currentStrength,
+      surfaceSpeed
+    )
+
+    const expectedSurfaceRoute = 10
 
     expect(result).toBe(expectedSurfaceRoute)
   })

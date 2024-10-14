@@ -1,4 +1,9 @@
-import { normalizeAngle, safeDecimals } from "../calc/math"
+import {
+  degreesToRadians,
+  normalizeAngle,
+  radiansToDegrees,
+  safeDecimals,
+} from "../calc/math"
 import { getWindDriftSign } from "./wind"
 
 /**
@@ -27,6 +32,53 @@ export function calculateSurfaceRouteFromTrueCape(
     safeDecimals(
       trueCape + getWindDriftSign(windDirection, trueCape) * windDrift
     )
+  )
+}
+
+/**
+ * Calculates the surface route considering the background route, current drift,
+ * current strength, and surface speed.
+ *
+ * @param backgroundRoute - The initial route before considering the current.
+ * @param currentDrift - The drift caused by the current.
+ * @param currentStrength - The strength of the current.
+ * @param surfaceSpeed - The speed of the surface vessel.
+ * @returns The calculated surface route.
+ *
+ * @example
+ * ```typescript
+ * const route = calculateSurfaceRoute(45, 10, 5, 20);
+ * console.log(route); // Output will vary based on the input parameters
+ * ```
+ */
+export function calculateSurfaceRoute(
+  backgroundRoute: number,
+  currentDrift: number,
+  currentStrength: number,
+  surfaceSpeed: number
+): number {
+  if (currentDrift === 0 || currentStrength === 0) {
+    return backgroundRoute
+  }
+
+  if (surfaceSpeed === 0) {
+    return currentDrift
+  }
+
+  // Using trigonometry with sinus rule to calculate the angle delta.
+  // The angle delta is the angle between the background route and the surface route.
+  const innerSurfaceRoute = radiansToDegrees(
+    Math.asin(
+      Math.sin(
+        (currentStrength *
+          Math.sin(degreesToRadians(backgroundRoute - currentDrift))) /
+          surfaceSpeed
+      )
+    )
+  )
+
+  return parseFloat(
+    normalizeAngle(innerSurfaceRoute + backgroundRoute).toFixed(1)
   )
 }
 
@@ -83,9 +135,9 @@ export function calculateTrueCapeFromCapeCompass(
 }
 
 /**
- * Calculates the compass heading by adjusting the given capVerde heading with the variation.
+ * Calculates the compass heading by adjusting the given trueCape heading with the variation.
  *
- * @param capVerde - The initial heading in degrees.
+ * @param trueCape - The initial heading in degrees.
  * @param variation - The variation to adjust the heading by in degrees.
  * @returns The adjusted compass heading in degrees.
  *
@@ -96,10 +148,10 @@ export function calculateTrueCapeFromCapeCompass(
  * ```
  */
 export function calculateCapeCompass(
-  capVerde: number,
+  trueCape: number,
   variation: number
 ): number {
-  return normalizeAngle(safeDecimals(capVerde - variation))
+  return normalizeAngle(safeDecimals(trueCape - variation))
 }
 
 /**
@@ -177,8 +229,8 @@ export function calculateDeclinaison(
     throw new Error("The current year must be greater than the initial year")
   }
 
-  // As degrees and minutes are used in the calculation, we need to convert the declinaison to a value expressed in degrees only
-  // Keep in mind that a declinaison of 0.6 equals 1.0, as 60' = 1° (0°60' = 1° <=> 0,6 = 1)
+  // As degrees and minutes are used in the calculation, we need to convert the declinaison to a value expressed in degrees only.
+  // Keep in mind that a declinaison of 0.6 equals 1.0, as 60' = 1° (0°60' = 1° <=> 0,6 = 1).
   // Formula: (trunc(declinaison) * 0.6 + (declinaison - trunc(declinaison)) + annualDeclinaisonDelta * (currentYear - startYear)) / 0.6
   // Can be shortened as: (-0.4 * trunc(declinaison) + declinaison + annualDeclinaisonDelta * (currentYear - startYear)) / 0.6
   const calculatedDeclinaison =
