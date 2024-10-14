@@ -2,6 +2,35 @@ import { normalizeAngle, safeDecimals } from "../calc/math"
 import { getWindDriftSign } from "./wind"
 
 /**
+ * Calculates the surface route from the true cape considering wind drift and wind direction.
+ *
+ * @param trueCape - The true cape angle in degrees.
+ * @param windDrift - The wind drift angle in degrees.
+ * @param windDirection - The wind direction angle in degrees.
+ * @returns The calculated surface route angle in degrees.
+ *
+ * @example
+ * ```typescript
+ * const trueCape = 45;
+ * const windDrift = 10;
+ * const windDirection = 90;
+ * const surfaceRoute = calculateSurfaceRouteFromTrueCape(trueCape, windDrift, windDirection);
+ * console.log(surfaceRoute); // Output will depend on the implementation of normalizeAngle, safeDecimals, and getWindDriftSign
+ * ```
+ */
+export function calculateSurfaceRouteFromTrueCape(
+  trueCape: number,
+  windDrift: number,
+  windDirection: number
+): number {
+  return normalizeAngle(
+    safeDecimals(
+      trueCape + getWindDriftSign(windDirection, trueCape) * windDrift
+    )
+  )
+}
+
+/**
  * Calculates the Cape Verde from the surface route considering wind drift and directions.
  *
  * @param surfaceRoute - The initial surface route in degrees.
@@ -20,9 +49,9 @@ import { getWindDriftSign } from "./wind"
  * ```
  */
 export function calculateTrueCapeFromSurfaceRoute(
-  surfaceRoute: number, // degrees
+  surfaceRoute: number,
   windDrift: number,
-  windDirection: number // degrees
+  windDirection: number
 ): number {
   return normalizeAngle(
     safeDecimals(

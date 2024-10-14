@@ -3,6 +3,7 @@ import {
   calculateBearingCompassVariation,
   calculateDeclinaison,
   calculateRouteCompassVariation,
+  calculateSurfaceRouteFromTrueCape,
   calculateTrueCapeFromCapeCompass,
   calculateTrueCapeFromSurfaceRoute,
 } from "../route"
@@ -349,5 +350,87 @@ suite("calculateTrueCapeFromSurfaceRoute", () => {
     const expectedTrueCape = 10
 
     expect(result).toBe(expectedTrueCape)
+  })
+})
+
+suite("calculateSurfaceRouteFromTrueCape", () => {
+  test("should calculate the surface route correctly with positive wind drift", () => {
+    const trueCape = 45
+    const windDrift = 10
+    const windDirection = 90
+
+    const result = calculateSurfaceRouteFromTrueCape(
+      trueCape,
+      windDrift,
+      windDirection
+    )
+
+    const expectedSurfaceRoute = 35
+
+    expect(result).toBe(expectedSurfaceRoute)
+  })
+
+  test("should calculate the surface route correctly with negative wind drift", () => {
+    const trueCape = 45
+    const windDrift = 10
+    const windDirection = 270
+
+    const result = calculateSurfaceRouteFromTrueCape(
+      trueCape,
+      windDrift,
+      windDirection
+    )
+
+    const expectedSurfaceRoute = 55
+
+    expect(result).toBe(expectedSurfaceRoute)
+  })
+
+  test("should handle zero wind drift", () => {
+    const trueCape = 45
+    const windDrift = 0
+    const windDirection = 90
+
+    const result = calculateSurfaceRouteFromTrueCape(
+      trueCape,
+      windDrift,
+      windDirection
+    )
+
+    const expectedSurfaceRoute = 45
+
+    expect(result).toBe(expectedSurfaceRoute)
+  })
+
+  test("should handle zero true cape", () => {
+    const trueCape = 0
+    const windDrift = 10
+    const windDirection = 90
+
+    const result = calculateSurfaceRouteFromTrueCape(
+      trueCape,
+      windDrift,
+      windDirection
+    )
+
+    const expectedSurfaceRoute = 350
+
+    expect(result).toBe(expectedSurfaceRoute)
+  })
+
+  test("should normalize the surface route angle correctly", () => {
+    const trueCape = 355
+    const windDrift = 10
+    const windDirection = 270
+
+    const result = calculateSurfaceRouteFromTrueCape(
+      trueCape,
+      windDrift,
+      windDirection
+    )
+
+    const expectedSurfaceRoute = 5
+
+    expect(result).toBe(expectedSurfaceRoute)
   })
 })
