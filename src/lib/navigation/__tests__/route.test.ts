@@ -9,10 +9,10 @@ import {
 
 suite("calculateDeclinaison", () => {
   test("should calculate the magnetic declination correctly for a specific year", () => {
-    const declinaison = 4.1
+    const declinaison = 10
     const annualDeclinaisonDelta = -0.08
     const startYear = 2000
-    const currentYear = 2001
+    const currentYear = 2008
 
     const result = calculateDeclinaison(
       declinaison,
@@ -21,7 +21,7 @@ suite("calculateDeclinaison", () => {
       currentYear
     )
 
-    const expectedDeclination = 4.02
+    const expectedDeclination = 8.56
 
     expect(result).toBe(expectedDeclination)
   })

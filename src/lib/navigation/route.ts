@@ -148,13 +148,19 @@ export function calculateDeclinaison(
     throw new Error("The current year must be greater than the initial year")
   }
 
-  const newDeclinaisonInDegrees =
-    (Math.trunc(declinaison) * 0.6 +
-      (declinaison - Math.trunc(declinaison)) +
+  // As degrees and minutes are used in the calculation, we need to convert the declinaison to a value expressed in degrees only
+  // Keep in mind that a declinaison of 0.6 equals 1.0, as 60' = 1° (0°60' = 1° <=> 0,6 = 1)
+  // Formula: (trunc(declinaison) * 0.6 + (declinaison - trunc(declinaison)) + annualDeclinaisonDelta * (currentYear - startYear)) / 0.6
+  // Can be shortened as: (-0.4 * trunc(declinaison) + declinaison + annualDeclinaisonDelta * (currentYear - startYear)) / 0.6
+  const calculatedDeclinaison =
+    (-0.4 * Math.trunc(declinaison) +
+      declinaison +
       annualDeclinaisonDelta * (currentYear - startYear)) /
     0.6
-  const degrees = Math.trunc(newDeclinaisonInDegrees)
-  const minutes = (newDeclinaisonInDegrees - degrees) * 0.6
 
+  const degrees = Math.trunc(calculatedDeclinaison)
+  const minutes = (calculatedDeclinaison - degrees) * 0.6
+
+  // We then put back degrees and minutes together
   return safeDecimals(degrees + minutes)
 }
