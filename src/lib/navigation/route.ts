@@ -136,17 +136,14 @@ export function calculateBackgroundSpeed(params: {
       convertNauticalMilesToLatitudeDegrees(params.surfaceSpeed),
       convertAsXAxisAngle(params.surfaceRoute)
     )
-
-  return parseFloat(
-    safeDecimals(
-      convertLatitudeDegreesToNauticalMiles(
-        Math.sqrt(
-          (positionAfterSurfaceRouteProjection.x - params.longitude) ** 2 +
-            (positionAfterSurfaceRouteProjection.y - params.latitude) ** 2
-        )
-      )
-    ).toFixed(2)
+  const distanceInNauticMiles = convertLatitudeDegreesToNauticalMiles(
+    Math.sqrt(
+      (positionAfterSurfaceRouteProjection.x - params.longitude) ** 2 +
+        (positionAfterSurfaceRouteProjection.y - params.latitude) ** 2
+    )
   )
+
+  return parseFloat(safeDecimals(distanceInNauticMiles).toFixed(2))
 }
 
 /**
