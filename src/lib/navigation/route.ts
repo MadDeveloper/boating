@@ -67,6 +67,7 @@ export function calculateSurfaceRoute(
 
   // Using trigonometry with sinus rule to calculate the angle delta.
   // The angle delta is the angle between the background route and the surface route.
+  // The whole calculation has been simplified as its maximum.
   const innerSurfaceRoute = radiansToDegrees(
     Math.asin(
       Math.sin(

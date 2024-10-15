@@ -1,5 +1,9 @@
 import { expect, suite, test } from "vitest"
-import { calculateTrueBearing, calculateTrueRelativeBearing } from "../bearing"
+import {
+  calculateBearingFromRelativeBearing,
+  calculateTrueBearing,
+  calculateTrueRelativeBearing,
+} from "../bearing"
 
 suite("calculateTrueBearing", () => {
   test("should return the correct true bearing when the sum is less than 360", () => {
@@ -81,6 +85,38 @@ suite("calculateTrueRelativeBearing", () => {
 
   test("should handle large positive observed bearing and large positive instrumental error correctly", () => {
     const result = calculateTrueRelativeBearing(350, 350)
+    expect(result).to.equal(340)
+  })
+})
+
+suite("calculateBearingFromRelativeBearing", () => {
+  test("should return the correct bearing when the sum is less than 360", () => {
+    const result = calculateBearingFromRelativeBearing(45, 90)
+    expect(result).to.equal(135)
+  })
+
+  test("should return the correct bearing when the sum is exactly 360", () => {
+    const result = calculateBearingFromRelativeBearing(180, 180)
+    expect(result).to.equal(0)
+  })
+
+  test("should return the correct bearing when the sum is more than 360", () => {
+    const result = calculateBearingFromRelativeBearing(350, 20)
+    expect(result).to.equal(10)
+  })
+
+  test("should return the correct bearing when the relative bearing is 0", () => {
+    const result = calculateBearingFromRelativeBearing(0, 90)
+    expect(result).to.equal(90)
+  })
+
+  test("should return the correct bearing when the cape is 0", () => {
+    const result = calculateBearingFromRelativeBearing(45, 0)
+    expect(result).to.equal(45)
+  })
+
+  test("should handle large positive relative bearing and large positive cape correctly", () => {
+    const result = calculateBearingFromRelativeBearing(350, 350)
     expect(result).to.equal(340)
   })
 })

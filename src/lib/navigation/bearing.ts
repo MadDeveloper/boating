@@ -21,6 +21,29 @@ export function calculateTrueBearing(
 }
 
 /**
+ * Calculates the bearing from a given relative bearing and cape.
+ *
+ * This function takes a relative bearing and a cape (course angle) and returns
+ * the normalized bearing. The result is ensured to have safe decimal precision.
+ *
+ * @param relativeBearing - The relative bearing in degrees.
+ * @param cape - The cape (course angle) in degrees.
+ * @returns The normalized bearing in degrees.
+ *
+ * @example
+ * ```typescript
+ * const bearing = calculateBearingFromRelativeBearing(45, 90);
+ * console.log(bearing); // Output will depend on the implementation of normalizeAngle and safeDecimals
+ * ```
+ */
+export function calculateBearingFromRelativeBearing(
+  relativeBearing: number,
+  cape: number
+): number {
+  return normalizeAngle(safeDecimals(relativeBearing + cape))
+}
+
+/**
  * Calculates the true relative bearing by adjusting the observed relative bearing
  * with the instrumental error and normalizing the result.
  *
