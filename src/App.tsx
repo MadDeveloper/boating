@@ -1,5 +1,11 @@
 import { useState } from "react"
 import config from "./config"
+import {
+  calculateCapeCompass,
+  calculateRouteCompassVariation,
+  calculateSurfaceRoute,
+  calculateTrueCape,
+} from "./lib/navigation/route"
 import { calculateWindDrift } from "./lib/navigation/wind"
 
 export default function App() {
@@ -9,6 +15,23 @@ export default function App() {
     config.boat.driftCoefficient
   )
   const [drift, setDrift] = useState<number | null>(null)
+  const backgroundRoute = 150
+  const currentDirection = 155
+  const currentStrength = 1.5
+  const surfaceSpeed = 2.5
+  const windDrift = 5
+  const windDirection = 0
+  const declinaison = 4
+  const deviation = 8
+  const variation = calculateRouteCompassVariation(declinaison, deviation)
+  const surfaceRoute = calculateSurfaceRoute(
+    backgroundRoute,
+    currentDirection,
+    currentStrength,
+    surfaceSpeed
+  )
+  const trueCape = calculateTrueCape(surfaceRoute, windDrift, windDirection)
+  const capeCompass = calculateCapeCompass(trueCape, variation)
 
   function onClickCalculateWindDrift() {
     setDrift(calculateWindDrift(windSpeed, boatSpeed, driftCoefficient))
@@ -55,6 +78,18 @@ export default function App() {
           <span>Le coefficient de dérive est : {drift}&deg;</span>
         </div>
       )}
+      <div>
+        <span>Route Fond : {backgroundRoute}&deg;</span>
+      </div>
+      <div>
+        <span>Route Surface : {surfaceRoute}&deg;</span>
+      </div>
+      <div>
+        <span>Cap Vrai : {trueCape}&deg;</span>
+      </div>
+      <div>
+        <span>Cap Compas : {capeCompass}&deg;</span>
+      </div>
     </main>
   )
 }

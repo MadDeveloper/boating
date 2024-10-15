@@ -1,12 +1,13 @@
 import { expect, suite, test } from "vitest"
 import {
+  calculateBackgroundSpeed,
   calculateBearingCompassVariation,
   calculateDeclinaison,
   calculateRouteCompassVariation,
   calculateSurfaceRoute,
   calculateSurfaceRouteFromTrueCape,
+  calculateTrueCape,
   calculateTrueCapeFromCapeCompass,
-  calculateTrueCapeFromSurfaceRoute,
 } from "../route"
 
 suite("calculateDeclinaison", () => {
@@ -288,17 +289,13 @@ suite("calculateTrueCapeFromCapeCompass", () => {
   })
 })
 
-suite("calculateTrueCapeFromSurfaceRoute", () => {
+suite("calculateTrueCape", () => {
   test("should calculate the Cape Verde correctly with negative wind drift", () => {
     const surfaceRoute = 45
     const windDrift = 10
     const windDirection = 90
 
-    const result = calculateTrueCapeFromSurfaceRoute(
-      surfaceRoute,
-      windDrift,
-      windDirection
-    )
+    const result = calculateTrueCape(surfaceRoute, windDrift, windDirection)
 
     const expectedTrueCape = 55
 
@@ -310,11 +307,7 @@ suite("calculateTrueCapeFromSurfaceRoute", () => {
     const windDrift = 10
     const windDirection = 270
 
-    const result = calculateTrueCapeFromSurfaceRoute(
-      surfaceRoute,
-      windDrift,
-      windDirection
-    )
+    const result = calculateTrueCape(surfaceRoute, windDrift, windDirection)
 
     const expectedTrueCape = 35
 
@@ -326,11 +319,7 @@ suite("calculateTrueCapeFromSurfaceRoute", () => {
     const windDrift = 0
     const windDirection = 90
 
-    const result = calculateTrueCapeFromSurfaceRoute(
-      surfaceRoute,
-      windDrift,
-      windDirection
-    )
+    const result = calculateTrueCape(surfaceRoute, windDrift, windDirection)
 
     const expectedTrueCape = 45
 
@@ -342,11 +331,7 @@ suite("calculateTrueCapeFromSurfaceRoute", () => {
     const windDrift = 10
     const windDirection = 90
 
-    const result = calculateTrueCapeFromSurfaceRoute(
-      surfaceRoute,
-      windDrift,
-      windDirection
-    )
+    const result = calculateTrueCape(surfaceRoute, windDrift, windDirection)
 
     const expectedTrueCape = 10
 
@@ -439,13 +424,13 @@ suite("calculateSurfaceRouteFromTrueCape", () => {
 suite("calculateSurfaceRoute", () => {
   test("should calculate the surface route correctly with current drift", () => {
     const backgroundRoute = 186
-    const currentDrift = 160
+    const currentDirection = 160
     const currentStrength = 0.9
     const surfaceSpeed = 5
 
     const result = calculateSurfaceRoute(
       backgroundRoute,
-      currentDrift,
+      currentDirection,
       currentStrength,
       surfaceSpeed
     )
@@ -457,13 +442,13 @@ suite("calculateSurfaceRoute", () => {
 
   test("should calculate the surface route correctly with current drift - second test", () => {
     const backgroundRoute = 302
-    const currentDrift = 200
+    const currentDirection = 200
     const currentStrength = 0.8
     const surfaceSpeed = 5
 
     const result = calculateSurfaceRoute(
       backgroundRoute,
-      currentDrift,
+      currentDirection,
       currentStrength,
       surfaceSpeed
     )
@@ -475,13 +460,13 @@ suite("calculateSurfaceRoute", () => {
 
   test("should calculate the surface route correctly with zero current drift", () => {
     const backgroundRoute = 45
-    const currentDrift = 0
+    const currentDirection = 0
     const currentStrength = 5
     const surfaceSpeed = 20
 
     const result = calculateSurfaceRoute(
       backgroundRoute,
-      currentDrift,
+      currentDirection,
       currentStrength,
       surfaceSpeed
     )
@@ -493,31 +478,31 @@ suite("calculateSurfaceRoute", () => {
 
   test("should calculate the surface route correctly with zero current strength", () => {
     const backgroundRoute = 45
-    const currentDrift = 10
+    const currentDirection = 10
     const currentStrength = 0
     const surfaceSpeed = 20
 
     const result = calculateSurfaceRoute(
       backgroundRoute,
-      currentDrift,
+      currentDirection,
       currentStrength,
       surfaceSpeed
     )
 
     const expectedSurfaceRoute = 45
 
-    expect(result).toBeCloseTo(expectedSurfaceRoute, 3)
+    expect(result).toBe(expectedSurfaceRoute)
   })
 
   test("should calculate the surface route correctly with zero surface speed", () => {
     const backgroundRoute = 45
-    const currentDrift = 10
+    const currentDirection = 10
     const currentStrength = 5
     const surfaceSpeed = 0
 
     const result = calculateSurfaceRoute(
       backgroundRoute,
-      currentDrift,
+      currentDirection,
       currentStrength,
       surfaceSpeed
     )
@@ -525,5 +510,92 @@ suite("calculateSurfaceRoute", () => {
     const expectedSurfaceRoute = 10
 
     expect(result).toBe(expectedSurfaceRoute)
+  })
+})
+
+suite("calculateBackgroundSpeed", () => {
+  test("should calculate the background speed correctly", () => {
+    const params = {
+      longitude: -2.92,
+      latitude: 47.5036666667,
+      currentDirection: 155,
+      currentStrength: 1.5,
+      surfaceRoute: 147,
+      surfaceSpeed: 2.5,
+    }
+
+    const result = calculateBackgroundSpeed(params)
+
+    const expectedSpeed = 3.99
+
+    expect(result).toBe(expectedSpeed)
+  })
+
+  test("should calculate the background speed correctly - second test", () => {
+    const params = {
+      longitude: -3.05583333333,
+      latitude: 47.5191666667,
+      currentDirection: 120,
+      currentStrength: 1.4,
+      surfaceRoute: 144,
+      surfaceSpeed: 4.2,
+    }
+
+    const result = calculateBackgroundSpeed(params)
+
+    const expectedSpeed = 5.51
+
+    expect(result).toBe(expectedSpeed)
+  })
+
+  test("should handle zero current strength", () => {
+    const params = {
+      longitude: -73.935242,
+      latitude: 40.73061,
+      currentDirection: 90,
+      currentStrength: 0,
+      surfaceRoute: 180,
+      surfaceSpeed: 10,
+    }
+
+    const result = calculateBackgroundSpeed(params)
+
+    const expectedSpeed = 10 // Only surface speed should be considered
+
+    expect(result).toBeCloseTo(expectedSpeed, 1)
+  })
+
+  test("should handle zero surface speed", () => {
+    const params = {
+      longitude: -73.935242,
+      latitude: 40.73061,
+      currentDirection: 90,
+      currentStrength: 5,
+      surfaceRoute: 180,
+      surfaceSpeed: 0,
+    }
+
+    const result = calculateBackgroundSpeed(params)
+
+    const expectedSpeed = 5 // Only current strength should be considered
+
+    expect(result).toBeCloseTo(expectedSpeed, 1)
+  })
+
+  test("should handle zero current strength and zero surface speed", () => {
+    const params = {
+      longitude: -73.935242,
+      latitude: 40.73061,
+      currentDirection: 90,
+      currentStrength: 0,
+      surfaceRoute: 180,
+      surfaceSpeed: 0,
+    }
+
+    const result = calculateBackgroundSpeed(params)
+
+    const expectedSpeed = 0 // Both speeds are zero
+
+    expect(result).toBeCloseTo(expectedSpeed, 1)
   })
 })

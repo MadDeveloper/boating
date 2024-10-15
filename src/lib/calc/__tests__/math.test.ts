@@ -3,6 +3,9 @@ import { expect, suite, test } from "vitest"
 import {
   addAngle,
   areAnglesClose,
+  calculateCoordinatesWhenApplyingForce,
+  convertAsXAxisAngle,
+  cot,
   degreesToRadians,
   normalizeAngle,
   radiansToDegrees,
@@ -180,37 +183,37 @@ suite("normalizeAngle", () => {
 suite("degreesToRadians", () => {
   test("should convert 0 degrees to 0 radians", () => {
     const result = degreesToRadians(0)
-    expect(result).toBeCloseTo(0, 10)
+    expect(result).toBe(0)
   })
 
   test("should convert 180 degrees to π radians", () => {
     const result = degreesToRadians(180)
-    expect(result).toBeCloseTo(Math.PI, 10)
+    expect(result).toBe(Math.PI)
   })
 
   test("should convert 360 degrees to 2π radians", () => {
     const result = degreesToRadians(360)
-    expect(result).toBeCloseTo(2 * Math.PI, 10)
+    expect(result).toBe(2 * Math.PI)
   })
 
   test("should convert 90 degrees to π/2 radians", () => {
     const result = degreesToRadians(90)
-    expect(result).toBeCloseTo(Math.PI / 2, 10)
+    expect(result).toBe(Math.PI / 2)
   })
 
   test("should convert -90 degrees to -π/2 radians", () => {
     const result = degreesToRadians(-90)
-    expect(result).toBeCloseTo(-Math.PI / 2, 10)
+    expect(result).toBe(-Math.PI / 2)
   })
 
   test("should handle very small degree values", () => {
     const result = degreesToRadians(0.0001)
-    expect(result).toBeCloseTo(0.0001 * (Math.PI / 180), 10)
+    expect(result).toBe(0.0001 * (Math.PI / 180))
   })
 
   test("should handle very large degree values", () => {
     const result = degreesToRadians(1000000)
-    expect(result).toBeCloseTo(1000000 * (Math.PI / 180), 10)
+    expect(result).toBe(1000000 * (Math.PI / 180))
   })
 })
 
@@ -248,5 +251,126 @@ suite("radiansToDegrees", () => {
   test("should handle very large radian values", () => {
     const result = radiansToDegrees(1000000)
     expect(result).toBeCloseTo(1000000 * (180 / Math.PI), 10)
+  })
+})
+
+suite("cot", () => {
+  test("should calculate cotangent of 0 radians", () => {
+    const result = cot(0)
+    expect(result).toBe(Infinity)
+  })
+
+  test("should calculate cotangent of π/4 radians", () => {
+    const result = cot(Math.PI / 4)
+    expect(result).toBeCloseTo(1, 10)
+  })
+
+  test("should calculate cotangent of π/2 radians", () => {
+    const result = cot(Math.PI / 2)
+    expect(result).toBeCloseTo(0, 10)
+  })
+
+  test("should calculate cotangent of -π/4 radians", () => {
+    const result = cot(-Math.PI / 4)
+    expect(result).toBeCloseTo(-1, 10)
+  })
+
+  test("should handle very small radian values", () => {
+    const result = cot(0.0001)
+    expect(result).toBeCloseTo(1 / Math.tan(0.0001), 10)
+  })
+
+  test("should handle very large radian values", () => {
+    const result = cot(1000000)
+    expect(result).toBeCloseTo(1 / Math.tan(1000000), 10)
+  })
+})
+
+suite("convertAsXAxisAngle", () => {
+  test("should convert 0 degrees to 90 degrees", () => {
+    const result = convertAsXAxisAngle(0)
+    expect(result).toBe(90)
+  })
+
+  test("should convert 90 degrees to 0 degrees", () => {
+    const result = convertAsXAxisAngle(90)
+    expect(result).toBe(0)
+  })
+
+  test("should convert 180 degrees to -90 degrees", () => {
+    const result = convertAsXAxisAngle(180)
+    expect(result).toBe(-90)
+  })
+
+  test("should convert -90 degrees to 180 degrees", () => {
+    const result = convertAsXAxisAngle(-90)
+    expect(result).toBe(180)
+  })
+
+  test("should handle angles greater than 90 degrees", () => {
+    const result = convertAsXAxisAngle(120)
+    expect(result).toBe(-30)
+  })
+
+  test("should handle negative angles", () => {
+    const result = convertAsXAxisAngle(-45)
+    expect(result).toBe(135)
+  })
+
+  test("should handle angles greater than 360 degrees", () => {
+    const result = convertAsXAxisAngle(450)
+    expect(result).toBe(-360)
+  })
+
+  test("should handle very large angles", () => {
+    const result = convertAsXAxisAngle(1000)
+    expect(result).toBe(-910)
+  })
+
+  test("should handle very small angles", () => {
+    const result = convertAsXAxisAngle(0.0001)
+    expect(result).toBeCloseTo(89.9999, 10)
+  })
+})
+
+suite("calculateCoordinatesWhenApplyingForce", () => {
+  test("should calculate new coordinates when force is applied at 0 degrees", () => {
+    const result = calculateCoordinatesWhenApplyingForce(0, 0, 10, 0)
+    expect(result).toEqual({ x: 10, y: 0 })
+  })
+
+  test("should calculate new coordinates when force is applied at 90 degrees", () => {
+    const result = calculateCoordinatesWhenApplyingForce(0, 0, 10, 90)
+    expect(result).toEqual({ x: 0, y: 10 })
+  })
+
+  test("should calculate new coordinates when force is applied at 180 degrees", () => {
+    const result = calculateCoordinatesWhenApplyingForce(0, 0, 10, 180)
+    expect(result).toEqual({ x: -10, y: 0 })
+  })
+
+  test("should calculate new coordinates when force is applied at 270 degrees", () => {
+    const result = calculateCoordinatesWhenApplyingForce(0, 0, 10, 270)
+    expect(result).toEqual({ x: -0, y: -10 })
+  })
+
+  test("should calculate new coordinates when force is applied at 45 degrees", () => {
+    const result = calculateCoordinatesWhenApplyingForce(0, 0, 10, 45)
+    expect(result).toEqual({ x: 7.07106781186548, y: 7.07106781186548 })
+  })
+
+  test("should calculate new coordinates when initial coordinates are not zero", () => {
+    const result = calculateCoordinatesWhenApplyingForce(5, 5, 10, 45)
+    expect(result).toEqual({ x: 12.07106781186548, y: 12.07106781186548 })
+  })
+
+  test("should handle negative force values", () => {
+    const result = calculateCoordinatesWhenApplyingForce(0, 0, -10, 45)
+    expect(result).toEqual({ x: -7.07106781186547, y: -7.07106781186547 })
+  })
+
+  test("should handle negative initial coordinates", () => {
+    const result = calculateCoordinatesWhenApplyingForce(-5, -5, 10, 45)
+    expect(result).toEqual({ x: 2.07106781186548, y: 2.07106781186547 })
   })
 })

@@ -119,3 +119,67 @@ export function degreesToRadians(degrees: number): number {
 export function radiansToDegrees(radians: number): number {
   return radians * (180 / Math.PI)
 }
+
+/**
+ * Calculates the cotangent of a given angle in radians.
+ *
+ * @param {number} x - The angle in radians for which to calculate the cotangent.
+ * @returns {number} The cotangent of the given angle.
+ *
+ * @example
+ * ```typescript
+ * const angle = Math.PI / 4;
+ * const result = cot(angle);
+ * console.log(result); // Output will be approximately 1
+ * ```
+ */
+export function cot(x: number): number {
+  return 1 / Math.tan(x)
+}
+
+/**
+ * Calculates the new coordinates when a force is applied at a given angle.
+ *
+ * @param x - The initial x-coordinate.
+ * @param y - The initial y-coordinate.
+ * @param force - The magnitude of the force being applied.
+ * @param angle - The angle at which the force is applied, in degrees.
+ * @returns An object containing the new x and y coordinates.
+ *
+ * @example
+ * ```typescript
+ * const newCoordinates = calculateCoordinatesWhenApplyingForce(0, 0, 10, 45);
+ * console.log(newCoordinates); // { x: 7.0710678118654755, y: 7.071067811865475 }
+ * ```
+ */
+export function calculateCoordinatesWhenApplyingForce(
+  x: number,
+  y: number,
+  force: number,
+  angle: number
+): { x: number; y: number } {
+  return {
+    x: safeDecimals(x + force * Math.cos(degreesToRadians(angle))),
+    y: safeDecimals(y + force * Math.sin(degreesToRadians(angle))),
+  }
+}
+
+/**
+ * Converts an angle to its corresponding X-axis angle.
+ *
+ * This function takes an angle and converts it to the angle relative to the X-axis.
+ * The conversion is done by subtracting the given angle from 90 degrees.
+ *
+ * @param angle - The angle to be converted.
+ * @returns The converted X-axis angle.
+ *
+ * @example
+ * ```typescript
+ * const angle = 30;
+ * const xAxisAngle = convertAsXAxisAngle(angle);
+ * console.log(xAxisAngle); // Output: 60
+ * ```
+ */
+export function convertAsXAxisAngle(angle: number): number {
+  return 90 - angle
+}

@@ -1,9 +1,15 @@
 import {
+  calculateCoordinatesWhenApplyingForce,
+  convertAsXAxisAngle,
   degreesToRadians,
   normalizeAngle,
   radiansToDegrees,
   safeDecimals,
 } from "../calc/math"
+import {
+  convertLatitudeDegreesToNauticalMiles,
+  convertNauticalMilesToLatitudeDegrees,
+} from "./geography"
 import { getWindDriftSign } from "./wind"
 
 /**
@@ -36,11 +42,11 @@ export function calculateSurfaceRouteFromTrueCape(
 }
 
 /**
- * Calculates the surface route considering the background route, current drift,
+ * Calculates the surface route considering the background route, current direction,
  * current strength, and surface speed.
  *
- * @param backgroundRoute - The initial route before considering the current.
- * @param currentDrift - The drift caused by the current.
+ * @param backgroundRoute - The initial route before considering the current, in degrees.
+ * @param currentDirection - The current direction in degrees.
  * @param currentStrength - The strength of the current.
  * @param surfaceSpeed - The speed of the surface vessel.
  * @returns The calculated surface route.
@@ -53,16 +59,16 @@ export function calculateSurfaceRouteFromTrueCape(
  */
 export function calculateSurfaceRoute(
   backgroundRoute: number,
-  currentDrift: number,
+  currentDirection: number,
   currentStrength: number,
   surfaceSpeed: number
 ): number {
-  if (currentDrift === 0 || currentStrength === 0) {
+  if (currentDirection === 0 || currentStrength === 0) {
     return backgroundRoute
   }
 
   if (surfaceSpeed === 0) {
-    return currentDrift
+    return currentDirection
   }
 
   // Using trigonometry with sinus rule to calculate the angle delta.
@@ -72,7 +78,7 @@ export function calculateSurfaceRoute(
     Math.asin(
       Math.sin(
         (currentStrength *
-          Math.sin(degreesToRadians(backgroundRoute - currentDrift))) /
+          Math.sin(degreesToRadians(backgroundRoute - currentDirection))) /
           surfaceSpeed
       )
     )
@@ -80,6 +86,66 @@ export function calculateSurfaceRoute(
 
   return parseFloat(
     normalizeAngle(innerSurfaceRoute + backgroundRoute).toFixed(1)
+  )
+}
+
+/**
+ * Calculates the background speed based on the given parameters.
+ *
+ * @param params - An object containing the following properties:
+ * - `longitude` (number): The longitude of the current position.
+ * - `latitude` (number): The latitude of the current position.
+ * - `currentDirection` (number): The direction of the current in degrees.
+ * - `currentStrength` (number): The strength of the current in nautic milles.
+ * - `surfaceRoute` (number): The direction of the surface route in degrees.
+ * - `surfaceSpeed` (number): The speed of the surface route in nautic milles.
+ *
+ * @returns The calculated background speed as a number.
+ *
+ * @example
+ * ```typescript
+ * const speed = calculateBackgroundSpeed({
+ *   longitude: -73.935242,
+ *   latitude: 40.730610,
+ *   currentDirection: 90,
+ *   currentStrength: 5,
+ *   surfaceRoute: 180,
+ *   surfaceSpeed: 10
+ * });
+ * console.log(speed); // Output: calculated speed
+ * ```
+ */
+export function calculateBackgroundSpeed(params: {
+  longitude: number
+  latitude: number
+  currentDirection: number
+  currentStrength: number
+  surfaceRoute: number
+  surfaceSpeed: number
+}): number {
+  const positionAfterCurrentProjection = calculateCoordinatesWhenApplyingForce(
+    params.longitude,
+    params.latitude,
+    convertNauticalMilesToLatitudeDegrees(params.currentStrength),
+    convertAsXAxisAngle(params.currentDirection)
+  )
+  const positionAfterSurfaceRouteProjection =
+    calculateCoordinatesWhenApplyingForce(
+      positionAfterCurrentProjection.x,
+      positionAfterCurrentProjection.y,
+      convertNauticalMilesToLatitudeDegrees(params.surfaceSpeed),
+      convertAsXAxisAngle(params.surfaceRoute)
+    )
+
+  return parseFloat(
+    safeDecimals(
+      convertLatitudeDegreesToNauticalMiles(
+        Math.sqrt(
+          (positionAfterSurfaceRouteProjection.x - params.longitude) ** 2 +
+            (positionAfterSurfaceRouteProjection.y - params.latitude) ** 2
+        )
+      )
+    ).toFixed(2)
   )
 }
 
@@ -97,11 +163,11 @@ export function calculateSurfaceRoute(
  * const surfaceRoute = 45;
  * const windDrift = 10;
  * const windDirection = 90;
- * const trueCape = calculateTrueCapeFromSurfaceRoute(surfaceRoute, windDrift, windDirection);
+ * const trueCape = calculateTrueCape(surfaceRoute, windDrift, windDirection);
  * console.log(trueCape); // Output will depend on the implementation of getWindDriftSign
  * ```
  */
-export function calculateTrueCapeFromSurfaceRoute(
+export function calculateTrueCape(
   surfaceRoute: number,
   windDrift: number,
   windDirection: number
