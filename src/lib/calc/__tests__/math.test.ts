@@ -2,6 +2,7 @@
 import { expect, suite, test } from "vitest"
 import {
   addAngle,
+  arcctg,
   areAnglesClose,
   calculateCoordinatesWhenApplyingForce,
   convertAsXAxisAngle,
@@ -372,5 +373,32 @@ suite("calculateCoordinatesWhenApplyingForce", () => {
   test("should handle negative initial coordinates", () => {
     const result = calculateCoordinatesWhenApplyingForce(-5, -5, 10, 45)
     expect(result).toEqual({ x: 2.07106781186548, y: 2.07106781186547 })
+  })
+})
+
+suite("arcctg", () => {
+  test("should calculate arc-cotangent of 1", () => {
+    const result = arcctg(1)
+    expect(result).toBeCloseTo(Math.PI / 4, 10)
+  })
+
+  test("should calculate arc-cotangent of 0", () => {
+    const result = arcctg(0)
+    expect(result).toBeCloseTo(Math.PI / 2, 10)
+  })
+
+  test("should calculate arc-cotangent of -1", () => {
+    const result = arcctg(-1)
+    expect(result).toBeCloseTo((3 * Math.PI) / 4, 10)
+  })
+
+  test("should handle very small values", () => {
+    const result = arcctg(0.0001)
+    expect(result).toBeCloseTo(Math.PI / 2 - Math.atan(0.0001), 10)
+  })
+
+  test("should handle very large values", () => {
+    const result = arcctg(1000000)
+    expect(result).toBeCloseTo(Math.PI / 2 - Math.atan(1000000), 10)
   })
 })

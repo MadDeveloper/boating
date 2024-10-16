@@ -90,6 +90,36 @@ export function calculateSurfaceRoute(
 }
 
 /**
+ * Calculates the background route based on the given surface route, surface speed,
+ * current direction, and current strength.
+ *
+ * @param surfaceRoute - The route on the surface in degrees.
+ * @param surfaceSpeed - The speed on the surface in knots.
+ * @param currentDirection - The direction of the current in degrees.
+ * @param currentStrength - The strength of the current in knots.
+ * @returns The calculated background route as a number.
+ *
+ * @example
+ * ```typescript
+ * const route = calculateBackgroundRoute(45, 10, 90, 5);
+ * console.log(route); // Output will be the calculated background route
+ * ```
+ */
+export function calculateBackgroundRoute(
+  surfaceRoute: number,
+  surfaceSpeed: number,
+  currentDirection: number,
+  currentStrength: number
+): number {
+  return parseFloat(
+    safeDecimals(
+      (surfaceRoute * surfaceSpeed + currentDirection * currentStrength) /
+        (surfaceSpeed + currentStrength)
+    ).toFixed(1)
+  )
+}
+
+/**
  * Calculates the background speed based on the given parameters.
  *
  * @param params - An object containing the following properties:

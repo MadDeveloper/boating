@@ -1,5 +1,6 @@
 import { expect, suite, test } from "vitest"
 import {
+  calculateBackgroundRoute,
   calculateBackgroundSpeed,
   calculateBearingCompassVariation,
   calculateDeclinaison,
@@ -597,5 +598,95 @@ suite("calculateBackgroundSpeed", () => {
     const expectedSpeed = 0 // Both speeds are zero
 
     expect(result).toBeCloseTo(expectedSpeed, 1)
+  })
+})
+
+suite("calculateBackgroundRoute", () => {
+  test("should calculate the background route correctly with current drift", () => {
+    const surfaceRoute = 147
+    const surfaceSpeed = 2.5
+    const currentDirection = 155
+    const currentStrength = 1.5
+
+    const result = calculateBackgroundRoute(
+      surfaceRoute,
+      surfaceSpeed,
+      currentDirection,
+      currentStrength
+    )
+
+    const expectedBackgroundRoute = 150
+
+    expect(result).toBe(expectedBackgroundRoute)
+  })
+
+  test("should calculate the background route correctly with current drift - second test", () => {
+    const surfaceRoute = 144
+    const surfaceSpeed = 4.2
+    const currentDirection = 120
+    const currentStrength = 1.4
+
+    const result = calculateBackgroundRoute(
+      surfaceRoute,
+      surfaceSpeed,
+      currentDirection,
+      currentStrength
+    )
+
+    const expectedBackgroundRoute = 138
+
+    expect(result).toBe(expectedBackgroundRoute)
+  })
+
+  test("should handle zero surface speed", () => {
+    const surfaceRoute = 144
+    const surfaceSpeed = 0
+    const currentDirection = 120
+    const currentStrength = 1.4
+
+    const result = calculateBackgroundRoute(
+      surfaceRoute,
+      surfaceSpeed,
+      currentDirection,
+      currentStrength
+    )
+
+    const expectedBackgroundRoute = 120
+
+    expect(result).toBe(expectedBackgroundRoute)
+  })
+
+  test("should handle zero current strength", () => {
+    const surfaceRoute = 144
+    const surfaceSpeed = 4.2
+    const currentDirection = 120
+    const currentStrength = 0
+
+    const result = calculateBackgroundRoute(
+      surfaceRoute,
+      surfaceSpeed,
+      currentDirection,
+      currentStrength
+    )
+
+    const expectedBackgroundRoute = 144
+
+    expect(result).toBe(expectedBackgroundRoute)
+  })
+
+  test("should handle zero surface speed and zero current strength", () => {
+    const surfaceRoute = 144
+    const surfaceSpeed = 0
+    const currentDirection = 120
+    const currentStrength = 0
+
+    const result = calculateBackgroundRoute(
+      surfaceRoute,
+      surfaceSpeed,
+      currentDirection,
+      currentStrength
+    )
+
+    expect(result).toBeNaN()
   })
 })

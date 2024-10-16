@@ -138,6 +138,22 @@ export function cot(x: number): number {
 }
 
 /**
+ * Calculates the arc-cotangent (inverse cotangent) of a number.
+ *
+ * @param x - The number to calculate the arc-cotangent for.
+ * @returns The arc-cotangent of the given number in radians.
+ *
+ * @example
+ * ```typescript
+ * const result = arcctg(1);
+ * console.log(result); // Output: 0.7853981633974483 (which is π/4)
+ * ```
+ */
+export function arcctg(x: number) {
+  return Math.PI / 2 - Math.atan(x)
+}
+
+/**
  * Calculates the new coordinates when a force is applied at a given angle.
  *
  * @param x - The initial x-coordinate.
