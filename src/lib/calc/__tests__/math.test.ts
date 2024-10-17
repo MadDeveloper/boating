@@ -5,9 +5,9 @@ import {
   arcctg,
   areAnglesClose,
   calculateCoordinatesWhenApplyingForce,
-  convertAsXAxisAngle,
   cot,
   degreesToRadians,
+  invertAngleAxis,
   normalizeAngle,
   radiansToDegrees,
   safeDecimals,
@@ -287,49 +287,49 @@ suite("cot", () => {
   })
 })
 
-suite("convertAsXAxisAngle", () => {
+suite("invertAngleAxis", () => {
   test("should convert 0 degrees to 90 degrees", () => {
-    const result = convertAsXAxisAngle(0)
+    const result = invertAngleAxis(0)
     expect(result).toBe(90)
   })
 
   test("should convert 90 degrees to 0 degrees", () => {
-    const result = convertAsXAxisAngle(90)
+    const result = invertAngleAxis(90)
     expect(result).toBe(0)
   })
 
   test("should convert 180 degrees to -90 degrees", () => {
-    const result = convertAsXAxisAngle(180)
+    const result = invertAngleAxis(180)
     expect(result).toBe(-90)
   })
 
   test("should convert -90 degrees to 180 degrees", () => {
-    const result = convertAsXAxisAngle(-90)
+    const result = invertAngleAxis(-90)
     expect(result).toBe(180)
   })
 
   test("should handle angles greater than 90 degrees", () => {
-    const result = convertAsXAxisAngle(120)
+    const result = invertAngleAxis(120)
     expect(result).toBe(-30)
   })
 
   test("should handle negative angles", () => {
-    const result = convertAsXAxisAngle(-45)
+    const result = invertAngleAxis(-45)
     expect(result).toBe(135)
   })
 
   test("should handle angles greater than 360 degrees", () => {
-    const result = convertAsXAxisAngle(450)
+    const result = invertAngleAxis(450)
     expect(result).toBe(-360)
   })
 
   test("should handle very large angles", () => {
-    const result = convertAsXAxisAngle(1000)
+    const result = invertAngleAxis(1000)
     expect(result).toBe(-910)
   })
 
   test("should handle very small angles", () => {
-    const result = convertAsXAxisAngle(0.0001)
+    const result = invertAngleAxis(0.0001)
     expect(result).toBeCloseTo(89.9999, 10)
   })
 })

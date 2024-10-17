@@ -1,7 +1,7 @@
 import {
   calculateCoordinatesWhenApplyingForce,
-  convertAsXAxisAngle,
   degreesToRadians,
+  invertAngleAxis,
   normalizeAngle,
   radiansToDegrees,
   safeDecimals,
@@ -105,18 +105,69 @@ export function calculateSurfaceRoute(
  * console.log(route); // Output will be the calculated background route
  * ```
  */
-export function calculateBackgroundRoute(
-  surfaceRoute: number,
-  surfaceSpeed: number,
-  currentDirection: number,
+export function calculateBackgroundRoute(params: {
+  longitude: number
+  latitude: number
+  surfaceRoute: number
+  surfaceSpeed: number
+  currentDirection: number
   currentStrength: number
-): number {
-  return parseFloat(
-    safeDecimals(
-      (surfaceRoute * surfaceSpeed + currentDirection * currentStrength) /
-        (surfaceSpeed + currentStrength)
-    ).toFixed(1)
+}): number {
+  if (params.surfaceSpeed === 0 && params.currentStrength === 0) {
+    return 0
+  }
+
+  if (params.surfaceSpeed === 0) {
+    return params.currentDirection
+  }
+
+  if (params.currentDirection === 0) {
+    return params.surfaceRoute
+  }
+
+  const positionAfterSurfaceRouteProjection =
+    calculateCoordinatesWhenApplyingForce(
+      params.longitude,
+      params.latitude,
+      convertNauticalMilesToLatitudeDegrees(params.surfaceSpeed),
+      invertAngleAxis(params.surfaceRoute)
+    )
+
+  const positionAfterCurrentProjection = calculateCoordinatesWhenApplyingForce(
+    positionAfterSurfaceRouteProjection.x,
+    positionAfterSurfaceRouteProjection.y,
+    convertNauticalMilesToLatitudeDegrees(params.currentStrength),
+    invertAngleAxis(params.currentDirection)
   )
+
+  const directorCoefficient =
+    (positionAfterCurrentProjection.y - params.latitude) /
+    (positionAfterCurrentProjection.x - params.longitude)
+
+  const backgroundRoute = normalizeAngle(
+    invertAngleAxis(radiansToDegrees(Math.atan(directorCoefficient)) % 180) +
+      // @todo: This is a workaround to fix the issue with the angle calculation.
+      // Need to find a global mathematical solution.
+      (params.surfaceRoute > 180 &&
+      params.surfaceRoute - params.currentDirection < 270
+        ? 180
+        : 0)
+  )
+
+  // console.log({
+  //   ...params,
+  //   positionAfterSurfaceRouteProjection,
+  //   positionAfterCurrentProjection,
+  //   directorCoefficient,
+  //   backgroundRoute,
+  //   aa: ((radiansToDegrees(Math.atan(directorCoefficient)) % 180) - 180) % 180,
+  //   a: normalizeAngle(backgroundRoute),
+  //   b: invertAngleAxis(backgroundRoute),
+  //   c: normalizeAngle(invertAngleAxis(backgroundRoute)),
+  //   d: invertAngleAxis(normalizeAngle(backgroundRoute)),
+  // })
+
+  return parseFloat(safeDecimals(backgroundRoute).toFixed(1))
 }
 
 /**
@@ -157,14 +208,14 @@ export function calculateBackgroundSpeed(params: {
     params.longitude,
     params.latitude,
     convertNauticalMilesToLatitudeDegrees(params.currentStrength),
-    convertAsXAxisAngle(params.currentDirection)
+    invertAngleAxis(params.currentDirection)
   )
   const positionAfterSurfaceRouteProjection =
     calculateCoordinatesWhenApplyingForce(
       positionAfterCurrentProjection.x,
       positionAfterCurrentProjection.y,
       convertNauticalMilesToLatitudeDegrees(params.surfaceSpeed),
-      convertAsXAxisAngle(params.surfaceRoute)
+      invertAngleAxis(params.surfaceRoute)
     )
   const distanceInNauticMiles = convertLatitudeDegreesToNauticalMiles(
     Math.sqrt(

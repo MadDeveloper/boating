@@ -602,38 +602,202 @@ suite("calculateBackgroundSpeed", () => {
 })
 
 suite("calculateBackgroundRoute", () => {
-  test("should calculate the background route correctly with current drift", () => {
+  test("should calculate the background route correctly with current drift - first", () => {
     const surfaceRoute = 147
     const surfaceSpeed = 2.5
     const currentDirection = 155
     const currentStrength = 1.5
 
-    const result = calculateBackgroundRoute(
+    const result = calculateBackgroundRoute({
+      longitude: -2.92,
+      latitude: 47.5036666667,
       surfaceRoute,
       surfaceSpeed,
       currentDirection,
-      currentStrength
-    )
+      currentStrength,
+    })
 
     const expectedBackgroundRoute = 150
 
     expect(result).toBe(expectedBackgroundRoute)
   })
 
-  test("should calculate the background route correctly with current drift - second test", () => {
-    const surfaceRoute = 144
-    const surfaceSpeed = 4.2
-    const currentDirection = 120
-    const currentStrength = 1.4
+  test("should calculate the background route correctly with current drift - second", () => {
+    const surfaceRoute = 273
+    const surfaceSpeed = 2
+    const currentDirection = 8
+    const currentStrength = 1
 
-    const result = calculateBackgroundRoute(
+    const result = calculateBackgroundRoute({
+      longitude: -2.9708333333,
+      latitude: 47.4375,
       surfaceRoute,
       surfaceSpeed,
       currentDirection,
-      currentStrength
-    )
+      currentStrength,
+    })
 
-    const expectedBackgroundRoute = 138
+    const expectedBackgroundRoute = 300.5
+
+    expect(result).toBe(expectedBackgroundRoute)
+  })
+
+  test("should calculate the background route correctly with current drift - third", () => {
+    const surfaceRoute = 354
+    const surfaceSpeed = 3.2
+    const currentDirection = 308
+    const currentStrength = 1.4
+
+    const result = calculateBackgroundRoute({
+      longitude: -3.05925,
+      latitude: 47.2875,
+      surfaceRoute,
+      surfaceSpeed,
+      currentDirection,
+      currentStrength,
+    })
+
+    const expectedBackgroundRoute = 340.4
+
+    expect(result).toBe(expectedBackgroundRoute)
+  })
+
+  test("should calculate the background route correctly with current drift - fourth", () => {
+    const surfaceRoute = 334
+    const surfaceSpeed = 4.8
+    const currentDirection = 128
+    const currentStrength = 0.7
+
+    const result = calculateBackgroundRoute({
+      longitude: -3.1016666667,
+      latitude: 47.3808333333,
+      surfaceRoute,
+      surfaceSpeed,
+      currentDirection,
+      currentStrength,
+    })
+
+    const expectedBackgroundRoute = 338.2
+
+    expect(result).toBe(expectedBackgroundRoute)
+  })
+
+  test("should calculate the background route correctly with current drift - fifth", () => {
+    const surfaceRoute = 311
+    const surfaceSpeed = 5
+    const currentDirection = 200
+    const currentStrength = 0.8
+
+    const result = calculateBackgroundRoute({
+      longitude: -2.7525,
+      latitude: 47.36,
+      surfaceRoute,
+      surfaceSpeed,
+      currentDirection,
+      currentStrength,
+    })
+
+    const expectedBackgroundRoute = 302
+
+    expect(result).toBe(expectedBackgroundRoute)
+  })
+
+  test("should calculate the background route correctly with current drift - sixth", () => {
+    const surfaceRoute = 191
+    const surfaceSpeed = 5
+    const currentDirection = 160
+    const currentStrength = 0.9
+
+    const result = calculateBackgroundRoute({
+      longitude: -2.6475,
+      latitude: 47.3991666667,
+      surfaceRoute,
+      surfaceSpeed,
+      currentDirection,
+      currentStrength,
+    })
+
+    const expectedBackgroundRoute = 186.4
+
+    expect(result).toBe(expectedBackgroundRoute)
+  })
+
+  test("should calculate the background route correctly with current drift - seventh", () => {
+    const surfaceRoute = 154.5
+    const surfaceSpeed = 4.5
+    const currentDirection = 180
+    const currentStrength = 1.2
+
+    const result = calculateBackgroundRoute({
+      longitude: -2.9933333333,
+      latitude: 47.5383333333,
+      surfaceRoute,
+      surfaceSpeed,
+      currentDirection,
+      currentStrength,
+    })
+
+    const expectedBackgroundRoute = 159.8
+
+    expect(result).toBe(expectedBackgroundRoute)
+  })
+
+  test("should calculate the background route correctly with current drift - eighth", () => {
+    const surfaceRoute = 142.5
+    const surfaceSpeed = 4
+    const currentDirection = 250
+    const currentStrength = 1.2
+
+    const result = calculateBackgroundRoute({
+      longitude: -2.9916666667,
+      latitude: 47.5316666667,
+      surfaceRoute,
+      surfaceSpeed,
+      currentDirection,
+      currentStrength,
+    })
+
+    const expectedBackgroundRoute = 160
+
+    expect(result).toBe(expectedBackgroundRoute)
+  })
+
+  test("should calculate the background route correctly with current drift - ninth", () => {
+    const surfaceRoute = 355
+    const surfaceSpeed = 4
+    const currentDirection = 74
+    const currentStrength = 1.1
+
+    const result = calculateBackgroundRoute({
+      longitude: -2.5916666667,
+      latitude: 47.3541666667,
+      surfaceRoute,
+      surfaceSpeed,
+      currentDirection,
+      currentStrength,
+    })
+
+    const expectedBackgroundRoute = 9.4
+
+    expect(result).toBe(expectedBackgroundRoute)
+  })
+
+  test("should calculate the background route correctly with current drift - tenth", () => {
+    const surfaceRoute = 177
+    const surfaceSpeed = 4.8
+    const currentDirection = 82
+    const currentStrength = 1.2
+
+    const result = calculateBackgroundRoute({
+      longitude: -3.04583333333,
+      latitude: 47.4016666667,
+      surfaceRoute,
+      surfaceSpeed,
+      currentDirection,
+      currentStrength,
+    })
+
+    const expectedBackgroundRoute = 162.7
 
     expect(result).toBe(expectedBackgroundRoute)
   })
@@ -644,12 +808,14 @@ suite("calculateBackgroundRoute", () => {
     const currentDirection = 120
     const currentStrength = 1.4
 
-    const result = calculateBackgroundRoute(
+    const result = calculateBackgroundRoute({
+      longitude: -2.9708333333,
+      latitude: 47.4375,
       surfaceRoute,
       surfaceSpeed,
       currentDirection,
-      currentStrength
-    )
+      currentStrength,
+    })
 
     const expectedBackgroundRoute = 120
 
@@ -662,12 +828,14 @@ suite("calculateBackgroundRoute", () => {
     const currentDirection = 120
     const currentStrength = 0
 
-    const result = calculateBackgroundRoute(
+    const result = calculateBackgroundRoute({
+      longitude: -2.9708333333,
+      latitude: 47.4375,
       surfaceRoute,
       surfaceSpeed,
       currentDirection,
-      currentStrength
-    )
+      currentStrength,
+    })
 
     const expectedBackgroundRoute = 144
 
@@ -680,13 +848,17 @@ suite("calculateBackgroundRoute", () => {
     const currentDirection = 120
     const currentStrength = 0
 
-    const result = calculateBackgroundRoute(
+    const result = calculateBackgroundRoute({
+      longitude: -2.9708333333,
+      latitude: 47.4375,
       surfaceRoute,
       surfaceSpeed,
       currentDirection,
-      currentStrength
-    )
+      currentStrength,
+    })
 
-    expect(result).toBeNaN()
+    const expectedBackgroundRoute = 0
+
+    expect(result).toBe(expectedBackgroundRoute)
   })
 })

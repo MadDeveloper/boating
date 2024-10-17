@@ -181,21 +181,21 @@ export function calculateCoordinatesWhenApplyingForce(
 }
 
 /**
- * Converts an angle to its corresponding X-axis angle.
+ * Invert the angle axis.
  *
- * This function takes an angle and converts it to the angle relative to the X-axis.
+ * This function takes an angle and invert its axis.
  * The conversion is done by subtracting the given angle from 90 degrees.
  *
- * @param angle - The angle to be converted.
- * @returns The converted X-axis angle.
+ * @param angle - The angle to be inverted.
+ * @returns The inverted angle.
  *
  * @example
  * ```typescript
  * const angle = 30;
- * const xAxisAngle = convertAsXAxisAngle(angle);
- * console.log(xAxisAngle); // Output: 60
+ * const invertedAngle = invertAngleAxis(angle);
+ * console.log(invertedAngle); // Output: 60
  * ```
  */
-export function convertAsXAxisAngle(angle: number): number {
+export function invertAngleAxis(angle: number): number {
   return 90 - angle
 }
