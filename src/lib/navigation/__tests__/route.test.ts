@@ -802,6 +802,46 @@ suite("calculateBackgroundRoute", () => {
     expect(result).toBe(expectedBackgroundRoute)
   })
 
+  test("should calculate the background route correctly with current drift - eleventh", () => {
+    const surfaceRoute = 191.1
+    const surfaceSpeed = 5
+    const currentDirection = 74
+    const currentStrength = 1
+
+    const result = calculateBackgroundRoute({
+      longitude: -3.04583333333,
+      latitude: 47.4016666667,
+      surfaceRoute,
+      surfaceSpeed,
+      currentDirection,
+      currentStrength,
+    })
+
+    const expectedBackgroundRoute = 180
+
+    expect(result).toBe(expectedBackgroundRoute)
+  })
+
+  test("should calculate the background route correctly with current drift - twelfth", () => {
+    const surfaceRoute = 348.9
+    const surfaceSpeed = 5
+    const currentDirection = 74
+    const currentStrength = 1
+
+    const result = calculateBackgroundRoute({
+      longitude: -3.04583333333,
+      latitude: 47.4016666667,
+      surfaceRoute,
+      surfaceSpeed,
+      currentDirection,
+      currentStrength,
+    })
+
+    const expectedBackgroundRoute = 0
+
+    expect(result).toBe(expectedBackgroundRoute)
+  })
+
   test("should handle zero surface speed", () => {
     const surfaceRoute = 144
     const surfaceSpeed = 0

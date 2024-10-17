@@ -145,13 +145,14 @@ export function calculateBackgroundRoute(params: {
     (positionAfterCurrentProjection.x - params.longitude)
 
   const backgroundRoute = normalizeAngle(
-    invertAngleAxis(radiansToDegrees(Math.atan(directorCoefficient)) % 180) +
-      // @todo: This is a workaround to fix the issue with the angle calculation.
-      // Need to find a global mathematical solution.
-      (params.surfaceRoute > 180 &&
-      params.surfaceRoute - params.currentDirection < 270
-        ? 180
-        : 0)
+    parseFloat(
+      safeDecimals(
+        invertAngleAxis(radiansToDegrees(Math.atan(directorCoefficient))) +
+          // @todo: This is a workaround to fix the issue with the angle calculation.
+          // Need to find a global mathematical solution.
+          (positionAfterCurrentProjection.x < params.longitude ? 180 : 0)
+      ).toFixed(1)
+    )
   )
 
   // console.log({
@@ -167,7 +168,7 @@ export function calculateBackgroundRoute(params: {
   //   d: invertAngleAxis(normalizeAngle(backgroundRoute)),
   // })
 
-  return parseFloat(safeDecimals(backgroundRoute).toFixed(1))
+  return parseFloat(backgroundRoute.toFixed(1))
 }
 
 /**
