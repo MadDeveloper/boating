@@ -13,10 +13,10 @@ import {
 
 suite("calculateDeclinaison", () => {
   test("should calculate the magnetic declination correctly for a specific year", () => {
-    const declinaison = 10
-    const annualDeclinaisonDelta = -0.08
+    const declinaison = 10.6
+    const annualDeclinaisonDelta = -8
     const startYear = 2000
-    const currentYear = 2008
+    const currentYear = 2015
 
     const result = calculateDeclinaison(
       declinaison,
@@ -25,7 +25,7 @@ suite("calculateDeclinaison", () => {
       currentYear
     )
 
-    const expectedDeclination = 8.56
+    const expectedDeclination = 8.6
 
     expect(result).toBe(expectedDeclination)
   })
@@ -65,8 +65,8 @@ suite("calculateDeclinaison", () => {
   })
 
   test("should handle positive annual declination delta with negative declinaison", () => {
-    const declinaison = -4.1
-    const annualDeclinaisonDelta = 0.08
+    const declinaison = -4.17
+    const annualDeclinaisonDelta = 8
     const startYear = 2000
     const currentYear = 2024
 
@@ -77,14 +77,14 @@ suite("calculateDeclinaison", () => {
       currentYear
     )
 
-    const expectedDeclination = -0.58
+    const expectedDeclination = -0.97
 
     expect(result).toBe(expectedDeclination)
   })
 
   test("should handle negative annual declination delta with negative declinaison", () => {
-    const declinaison = -4.1
-    const annualDeclinaisonDelta = -0.08
+    const declinaison = -4.17
+    const annualDeclinaisonDelta = -8
     const startYear = 2000
     const currentYear = 2014
 
@@ -95,14 +95,14 @@ suite("calculateDeclinaison", () => {
       currentYear
     )
 
-    const expectedDeclination = -6.02
+    const expectedDeclination = -6.04
 
     expect(result).toBe(expectedDeclination)
   })
 
   test("should handle negative annual declination delta with positive declinaison", () => {
-    const declinaison = 4.1
-    const annualDeclinaisonDelta = -0.08
+    const declinaison = 4.17
+    const annualDeclinaisonDelta = -8
     const startYear = 2000
     const currentYear = 2024
 
@@ -113,7 +113,7 @@ suite("calculateDeclinaison", () => {
       currentYear
     )
 
-    const expectedDeclination = 0.58
+    const expectedDeclination = 0.97
 
     expect(result).toBe(expectedDeclination)
   })

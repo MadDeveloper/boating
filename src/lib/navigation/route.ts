@@ -140,16 +140,17 @@ export function calculateBackgroundRoute(params: {
     invertAngleAxis(params.currentDirection)
   )
 
-  const directorCoefficient =
+  const slope =
     (positionAfterCurrentProjection.y - params.latitude) /
     (positionAfterCurrentProjection.x - params.longitude)
 
   const backgroundRoute = normalizeAngle(
     parseFloat(
       safeDecimals(
-        invertAngleAxis(radiansToDegrees(Math.atan(directorCoefficient))) +
+        invertAngleAxis(radiansToDegrees(Math.atan(slope))) +
           // @todo: This is a workaround to fix the issue with the angle calculation.
           // Need to find a global mathematical solution.
+          // We could use the initial cap formula to calculate the angle. (atan2)
           (positionAfterCurrentProjection.x < params.longitude ? 180 : 0)
       ).toFixed(1)
     )
@@ -348,7 +349,7 @@ export function calculateBearingCompassVariation(
  * Calculates the magnetic declination for a given year based on the initial declination and the annual change in declination.
  *
  * @param declinaison - The initial magnetic declination in degrees.
- * @param annualDeclinaisonDelta - The annual change in magnetic declination in degrees.
+ * @param annualDeclinaisonDelta - The annual change in magnetic declination in minutes.
  * @param startYear - The year when the initial declination was recorded.
  * @param currentYear - The year for which the magnetic declination is to be calculated. Defaults to the current year.
  * @returns The calculated magnetic declination for the given year.
@@ -357,7 +358,7 @@ export function calculateBearingCompassVariation(
  * @example
  * ```typescript
  * const initialDeclination = 10; // degrees
- * const annualChange = 0.1; // degrees per year
+ * const annualChange = 1; // minutes per year
  * const startYear = 2000;
  * const currentYear = 2023;
  *
@@ -375,19 +376,10 @@ export function calculateDeclinaison(
     throw new Error("The current year must be greater than the initial year")
   }
 
-  // As degrees and minutes are used in the calculation, we need to convert the declinaison to a value expressed in degrees only.
-  // Keep in mind that a declinaison of 0.6 equals 1.0, as 60' = 1° (0°60' = 1° <=> 0,6 = 1).
-  // Formula: (trunc(declinaison) * 0.6 + (declinaison - trunc(declinaison)) + annualDeclinaisonDelta * (currentYear - startYear)) / 0.6
-  // Can be shortened as: (-0.4 * trunc(declinaison) + declinaison + annualDeclinaisonDelta * (currentYear - startYear)) / 0.6
-  const calculatedDeclinaison =
-    (-0.4 * Math.trunc(declinaison) +
-      declinaison +
-      annualDeclinaisonDelta * (currentYear - startYear)) /
-    0.6
-
-  const degrees = Math.trunc(calculatedDeclinaison)
-  const minutes = (calculatedDeclinaison - degrees) * 0.6
-
   // We then put back degrees and minutes together
-  return safeDecimals(degrees + minutes)
+  return parseFloat(
+    safeDecimals(
+      declinaison + (annualDeclinaisonDelta * (currentYear - startYear)) / 60
+    ).toFixed(2)
+  )
 }
