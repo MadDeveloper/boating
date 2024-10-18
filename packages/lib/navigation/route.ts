@@ -5,12 +5,12 @@ import {
   normalizeAngle,
   radiansToDegrees,
   safeDecimals,
-} from "../calc/math"
+} from "../calc/math.ts"
 import {
   convertLatitudeDegreesToNauticalMiles,
   convertNauticalMilesToLatitudeDegrees,
-} from "./geography"
-import { getWindDriftSign } from "./wind"
+} from "./geography.ts"
+import { getWindDriftSign } from "./wind.ts"
 
 /**
  * Calculates the surface route from the true cape considering wind drift and wind direction.
@@ -376,7 +376,6 @@ export function calculateDeclinaison(
     throw new Error("The current year must be greater than the initial year")
   }
 
-  // We then put back degrees and minutes together
   return parseFloat(
     safeDecimals(
       declinaison + (annualDeclinaisonDelta * (currentYear - startYear)) / 60

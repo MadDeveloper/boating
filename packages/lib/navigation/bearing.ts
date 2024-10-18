@@ -1,4 +1,4 @@
-import { normalizeAngle, safeDecimals } from "../calc/math"
+import { normalizeAngle, safeDecimals } from "../calc/math.ts"
 
 /**
  * Calculates the true bearing by adjusting the observed bearing with the instrumental error.
