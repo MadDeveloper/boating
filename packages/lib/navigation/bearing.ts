@@ -15,7 +15,7 @@ import { normalizeAngle, safeDecimals } from "../calc/math.ts"
  */
 export function calculateTrueBearing(
   compassBearing: number,
-  variation: number
+  variation: number,
 ): number {
   return normalizeAngle(safeDecimals(compassBearing + variation))
 }
@@ -38,7 +38,7 @@ export function calculateTrueBearing(
  */
 export function calculateBearingFromRelativeBearing(
   relativeBearing: number,
-  cape: number
+  cape: number,
 ): number {
   return normalizeAngle(safeDecimals(relativeBearing + cape))
 }
@@ -59,9 +59,9 @@ export function calculateBearingFromRelativeBearing(
  */
 export function calculateTrueRelativeBearing(
   observedRelativeBearing: number,
-  instrumentalError: number
+  instrumentalError: number,
 ): number {
   return normalizeAngle(
-    safeDecimals(observedRelativeBearing + instrumentalError)
+    safeDecimals(observedRelativeBearing + instrumentalError),
   )
 }

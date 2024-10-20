@@ -23,7 +23,7 @@ describe("calculateDeclinaison", () => {
       declinaison,
       annualDeclinaisonDelta,
       startYear,
-      currentYear
+      currentYear,
     )
 
     const expectedDeclination = 8.6
@@ -42,7 +42,7 @@ describe("calculateDeclinaison", () => {
         declinaison,
         annualDeclinaisonDelta,
         startYear,
-        currentYear
+        currentYear,
       )
     })
   })
@@ -57,7 +57,7 @@ describe("calculateDeclinaison", () => {
       declinaison,
       annualDeclinaisonDelta,
       startYear,
-      currentYear
+      currentYear,
     )
 
     const expectedDeclination = declinaison
@@ -75,7 +75,7 @@ describe("calculateDeclinaison", () => {
       declinaison,
       annualDeclinaisonDelta,
       startYear,
-      currentYear
+      currentYear,
     )
 
     const expectedDeclination = -0.97
@@ -93,7 +93,7 @@ describe("calculateDeclinaison", () => {
       declinaison,
       annualDeclinaisonDelta,
       startYear,
-      currentYear
+      currentYear,
     )
 
     const expectedDeclination = -6.04
@@ -111,7 +111,7 @@ describe("calculateDeclinaison", () => {
       declinaison,
       annualDeclinaisonDelta,
       startYear,
-      currentYear
+      currentYear,
     )
 
     const expectedDeclination = 0.97
@@ -350,7 +350,7 @@ describe("calculateSurfaceRouteFromTrueCape", () => {
     const result = calculateSurfaceRouteFromTrueCape(
       trueCape,
       windDrift,
-      windDirection
+      windDirection,
     )
 
     const expectedSurfaceRoute = 35
@@ -366,7 +366,7 @@ describe("calculateSurfaceRouteFromTrueCape", () => {
     const result = calculateSurfaceRouteFromTrueCape(
       trueCape,
       windDrift,
-      windDirection
+      windDirection,
     )
 
     const expectedSurfaceRoute = 55
@@ -382,7 +382,7 @@ describe("calculateSurfaceRouteFromTrueCape", () => {
     const result = calculateSurfaceRouteFromTrueCape(
       trueCape,
       windDrift,
-      windDirection
+      windDirection,
     )
 
     const expectedSurfaceRoute = 45
@@ -398,7 +398,7 @@ describe("calculateSurfaceRouteFromTrueCape", () => {
     const result = calculateSurfaceRouteFromTrueCape(
       trueCape,
       windDrift,
-      windDirection
+      windDirection,
     )
 
     const expectedSurfaceRoute = 350
@@ -414,7 +414,7 @@ describe("calculateSurfaceRouteFromTrueCape", () => {
     const result = calculateSurfaceRouteFromTrueCape(
       trueCape,
       windDrift,
-      windDirection
+      windDirection,
     )
 
     const expectedSurfaceRoute = 5
@@ -434,7 +434,7 @@ describe("calculateSurfaceRoute", () => {
       backgroundRoute,
       currentDirection,
       currentStrength,
-      surfaceSpeed
+      surfaceSpeed,
     )
 
     const expectedSurfaceRoute = 190.5
@@ -452,7 +452,7 @@ describe("calculateSurfaceRoute", () => {
       backgroundRoute,
       currentDirection,
       currentStrength,
-      surfaceSpeed
+      surfaceSpeed,
     )
 
     const expectedSurfaceRoute = 311
@@ -470,7 +470,7 @@ describe("calculateSurfaceRoute", () => {
       backgroundRoute,
       currentDirection,
       currentStrength,
-      surfaceSpeed
+      surfaceSpeed,
     )
 
     const expectedSurfaceRoute = 45
@@ -488,7 +488,7 @@ describe("calculateSurfaceRoute", () => {
       backgroundRoute,
       currentDirection,
       currentStrength,
-      surfaceSpeed
+      surfaceSpeed,
     )
 
     const expectedSurfaceRoute = 45
@@ -506,7 +506,7 @@ describe("calculateSurfaceRoute", () => {
       backgroundRoute,
       currentDirection,
       currentStrength,
-      surfaceSpeed
+      surfaceSpeed,
     )
 
     const expectedSurfaceRoute = 10

@@ -29,7 +29,7 @@ export enum GeographyDirection {
 export function convertNauticalMilesToLatitudeDegrees(
   nauticalMiles: number
 ): number {
-  return nauticalMiles / 60
+  return nauticalMiles / 60;
 }
 
 /**
@@ -45,5 +45,5 @@ export function convertNauticalMilesToLatitudeDegrees(
  * ```
  */
 export function convertLatitudeDegreesToNauticalMiles(degrees: number): number {
-  return degrees * 60
+  return degrees * 60;
 }

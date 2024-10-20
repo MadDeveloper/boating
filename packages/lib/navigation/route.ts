@@ -32,12 +32,12 @@ import { getWindDriftSign } from "./wind.ts"
 export function calculateSurfaceRouteFromTrueCape(
   trueCape: number,
   windDrift: number,
-  windDirection: number
+  windDirection: number,
 ): number {
   return normalizeAngle(
     safeDecimals(
-      trueCape + getWindDriftSign(windDirection, trueCape) * windDrift
-    )
+      trueCape + getWindDriftSign(windDirection, trueCape) * windDrift,
+    ),
   )
 }
 
@@ -61,7 +61,7 @@ export function calculateSurfaceRoute(
   backgroundRoute: number,
   currentDirection: number,
   currentStrength: number,
-  surfaceSpeed: number
+  surfaceSpeed: number,
 ): number {
   if (currentDirection === 0 || currentStrength === 0) {
     return backgroundRoute
@@ -79,13 +79,13 @@ export function calculateSurfaceRoute(
       Math.sin(
         (currentStrength *
           Math.sin(degreesToRadians(backgroundRoute - currentDirection))) /
-          surfaceSpeed
-      )
-    )
+          surfaceSpeed,
+      ),
+    ),
   )
 
   return parseFloat(
-    normalizeAngle(innerSurfaceRoute + backgroundRoute).toFixed(1)
+    normalizeAngle(innerSurfaceRoute + backgroundRoute).toFixed(1),
   )
 }
 
@@ -130,18 +130,17 @@ export function calculateBackgroundRoute(params: {
       params.longitude,
       params.latitude,
       convertNauticalMilesToLatitudeDegrees(params.surfaceSpeed),
-      invertAngleAxis(params.surfaceRoute)
+      invertAngleAxis(params.surfaceRoute),
     )
 
   const positionAfterCurrentProjection = calculateCoordinatesWhenApplyingForce(
     positionAfterSurfaceRouteProjection.x,
     positionAfterSurfaceRouteProjection.y,
     convertNauticalMilesToLatitudeDegrees(params.currentStrength),
-    invertAngleAxis(params.currentDirection)
+    invertAngleAxis(params.currentDirection),
   )
 
-  const slope =
-    (positionAfterCurrentProjection.y - params.latitude) /
+  const slope = (positionAfterCurrentProjection.y - params.latitude) /
     (positionAfterCurrentProjection.x - params.longitude)
 
   const backgroundRoute = normalizeAngle(
@@ -151,9 +150,9 @@ export function calculateBackgroundRoute(params: {
           // @todo: This is a workaround to fix the issue with the angle calculation.
           // Need to find a global mathematical solution.
           // We could use the initial cap formula to calculate the angle. (atan2)
-          (positionAfterCurrentProjection.x < params.longitude ? 180 : 0)
-      ).toFixed(1)
-    )
+          (positionAfterCurrentProjection.x < params.longitude ? 180 : 0),
+      ).toFixed(1),
+    ),
   )
 
   // console.log({
@@ -210,20 +209,20 @@ export function calculateBackgroundSpeed(params: {
     params.longitude,
     params.latitude,
     convertNauticalMilesToLatitudeDegrees(params.currentStrength),
-    invertAngleAxis(params.currentDirection)
+    invertAngleAxis(params.currentDirection),
   )
   const positionAfterSurfaceRouteProjection =
     calculateCoordinatesWhenApplyingForce(
       positionAfterCurrentProjection.x,
       positionAfterCurrentProjection.y,
       convertNauticalMilesToLatitudeDegrees(params.surfaceSpeed),
-      invertAngleAxis(params.surfaceRoute)
+      invertAngleAxis(params.surfaceRoute),
     )
   const distanceInNauticMiles = convertLatitudeDegreesToNauticalMiles(
     Math.sqrt(
       (positionAfterSurfaceRouteProjection.x - params.longitude) ** 2 +
-        (positionAfterSurfaceRouteProjection.y - params.latitude) ** 2
-    )
+        (positionAfterSurfaceRouteProjection.y - params.latitude) ** 2,
+    ),
   )
 
   return parseFloat(safeDecimals(distanceInNauticMiles).toFixed(2))
@@ -250,12 +249,12 @@ export function calculateBackgroundSpeed(params: {
 export function calculateTrueCape(
   surfaceRoute: number,
   windDrift: number,
-  windDirection: number
+  windDirection: number,
 ): number {
   return normalizeAngle(
     safeDecimals(
-      surfaceRoute - getWindDriftSign(windDirection, surfaceRoute) * windDrift
-    )
+      surfaceRoute - getWindDriftSign(windDirection, surfaceRoute) * windDrift,
+    ),
   )
 }
 
@@ -276,7 +275,7 @@ export function calculateTrueCape(
  */
 export function calculateTrueCapeFromCapeCompass(
   capeCompass: number,
-  variation: number
+  variation: number,
 ): number {
   return normalizeAngle(safeDecimals(capeCompass + variation))
 }
@@ -296,7 +295,7 @@ export function calculateTrueCapeFromCapeCompass(
  */
 export function calculateCapeCompass(
   trueCape: number,
-  variation: number
+  variation: number,
 ): number {
   return normalizeAngle(safeDecimals(trueCape - variation))
 }
@@ -318,7 +317,7 @@ export function calculateCapeCompass(
  */
 export function calculateRouteCompassVariation(
   declinaison: number,
-  deviation: number
+  deviation: number,
 ): number {
   return safeDecimals(declinaison + deviation)
 }
@@ -340,7 +339,7 @@ export function calculateRouteCompassVariation(
  */
 export function calculateBearingCompassVariation(
   declinaison: number,
-  deviation: number
+  deviation: number,
 ): number {
   return safeDecimals(declinaison + deviation)
 }
@@ -370,7 +369,7 @@ export function calculateDeclinaison(
   declinaison: number,
   annualDeclinaisonDelta: number,
   startYear: number,
-  currentYear: number = new Date().getFullYear()
+  currentYear: number = new Date().getFullYear(),
 ): number {
   if (currentYear < startYear) {
     throw new Error("The current year must be greater than the initial year")
@@ -378,7 +377,7 @@ export function calculateDeclinaison(
 
   return parseFloat(
     safeDecimals(
-      declinaison + (annualDeclinaisonDelta * (currentYear - startYear)) / 60
-    ).toFixed(2)
+      declinaison + (annualDeclinaisonDelta * (currentYear - startYear)) / 60,
+    ).toFixed(2),
   )
 }

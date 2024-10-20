@@ -172,7 +172,7 @@ export function calculateCoordinatesWhenApplyingForce(
   x: number,
   y: number,
   force: number,
-  angle: number
+  angle: number,
 ): { x: number; y: number } {
   return {
     x: safeDecimals(x + force * Math.cos(degreesToRadians(angle))),

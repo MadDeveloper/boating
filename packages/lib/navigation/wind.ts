@@ -1,4 +1,4 @@
-import { addAngle, areAnglesClose, safeDecimals } from "../calc/math.ts";
+import { addAngle, areAnglesClose, safeDecimals } from "../calc/math.ts"
 
 /**
  * Calculates the wind drift based on the wind speed, boat speed, and a drift coefficient.
@@ -20,15 +20,15 @@ import { addAngle, areAnglesClose, safeDecimals } from "../calc/math.ts";
 export function calculateWindDrift(
   windSpeed: number,
   boatSpeed: number,
-  driftCoefficient: number
+  driftCoefficient: number,
 ): number {
   if (boatSpeed === 0) {
-    return 0;
+    return 0
   }
 
   return parseFloat(
-    safeDecimals((windSpeed * driftCoefficient) / boatSpeed).toFixed(2)
-  );
+    safeDecimals((windSpeed * driftCoefficient) / boatSpeed).toFixed(2),
+  )
 }
 
 /**
@@ -49,26 +49,26 @@ export function calculateWindDrift(
  */
 export function getWindDriftSign(
   windDirection: number,
-  boatDirection: number
+  boatDirection: number,
 ): number {
   if (
     areAnglesClose(windDirection, boatDirection) ||
     areAnglesClose(windDirection, addAngle(boatDirection, -180))
   ) {
     // Wind is coming from the bow or the stern
-    return 0;
+    return 0
   }
 
   if (boatDirection >= 180) {
     if (windDirection > boatDirection || windDirection <= boatDirection - 180) {
-      return -1;
+      return -1
     }
 
-    return 1;
+    return 1
   }
 
   // boatDirection is <= 180
   return windDirection < boatDirection || windDirection >= boatDirection + 180
     ? 1
-    : -1;
+    : -1
 }

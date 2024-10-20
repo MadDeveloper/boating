@@ -65,7 +65,9 @@ describe("calculateWindDrift", () => {
     const windSpeed = 15.123456 // knots
     const boatSpeed = 10.654321 // knots
     const driftCoefficient = 0.5
-    const expectedDrift = parseFloat(((15.123456 * 0.5) / 10.654321).toFixed(2))
+    const expectedDrift = parseFloat(
+      ((15.123456 * 0.5) / 10.654321).toFixed(2),
+    )
 
     const drift = calculateWindDrift(windSpeed, boatSpeed, driftCoefficient)
     assertEquals(drift, expectedDrift)
