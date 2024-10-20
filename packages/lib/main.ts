@@ -1,3 +1,4 @@
+export * from "./calc/math.ts"
 export * from "./navigation/bearing.ts"
 export * from "./navigation/boat.ts"
 export * from "./navigation/geography.ts"
